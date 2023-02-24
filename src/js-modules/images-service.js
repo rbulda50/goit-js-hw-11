@@ -1,4 +1,4 @@
-import Notiflix from "notiflix";
+import axios from 'axios';
 
 const BASE_URL = 'https://pixabay.com/api';
 const API_KEY = '33896615-ace76cd589cb7d39e22f51a75';
@@ -11,11 +11,21 @@ export default class ImagesApiService {
     }
     async fetchImages() {
         try {
-            const response = await fetch(`${BASE_URL}/?key=${API_KEY}&q=${this.searchQuery}&per_page=40&page=${this.page}&image_type=photo&orientation=horizontal&safesearch=true`);
-            const images = await response.json();
+            const options = {
+                params: {
+                    key: API_KEY,
+                    q: this.searchQuery,
+                    per_page: 40,
+                    page: this.page,
+                    image_type: "photo",
+                    orientation: "horizontal",
+                    safesearch: true,
+                }
+            };
+            const response = await axios(BASE_URL, options);
             this.page += 1;
-            this.loadedHits += images.hits.length;
-            return images;
+            this.loadedHits += response.data.hits.length;
+            return response.data;
         } catch (error) {
             console.log(error)
         }

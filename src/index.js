@@ -2,9 +2,9 @@ import ImagesApiService from './js-modules/images-service';
 import renderMarkup from './js-modules/renderMarkup';
 import LoadMoreButton from './js-modules/load-more';
 import Notiflix from 'notiflix';
-import axios, { isCancel, AxiosError } from 'axios';
 
-
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 const refs = {
     galleryContainer: document.querySelector('.gallery'),
@@ -17,12 +17,17 @@ const loadMoreBtn = new LoadMoreButton({
     selector: '.load-more',
 });
 
+const simpleGallery = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+});
+
 refs.form.addEventListener('submit', onFindImages);
 loadMoreBtn.refs.button.addEventListener('click', onLoadMore);
 
-
 async function onFindImages(e) {
     e.preventDefault();
+    loadMoreBtn.hide();
 
     const inputValue = e.currentTarget.elements.searchQuery.value;
     imagesApiService.query = inputValue;
@@ -37,15 +42,16 @@ async function onFindImages(e) {
     try {
         const {hits, totalHits} = await imagesApiService.fetchImages();
         if (hits.length === 0) {
-            loadMoreBtn.hide();
-            return onError();
+            onError();
+            return loadMoreBtn.hide();
     }
             foundTotalHitsNotification(totalHits);
             appendImagesMarkup(hits);
             loadMoreBtn.show();
             loadMoreBtn.enable();
+            simpleGallery.refresh();
     } catch (error) {
-        console.log(error)
+            console.log(error)
     }
 };
 
@@ -53,18 +59,16 @@ async function onLoadMore() {
     const { totalHits, hits } = await imagesApiService.fetchImages();
     try {
         if (imagesApiService.loadedHits >= totalHits) {
-        loadMoreBtn.disable();
-        return endLoadMore();
-    } else {
-        return appendImagesMarkup(hits);
+            loadMoreBtn.disable();
+            return endLoadMore();
+        } else {
+            appendImagesMarkup(hits);
+            return simpleGallery.refresh();
     };
     } catch (error) {
         console.log(error)
-    }
+    };
 };
-
-
-
 
 function onError() {
     return Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
@@ -78,6 +82,7 @@ function appendImagesMarkup(images) {
     refs.galleryContainer.insertAdjacentHTML('beforeend', renderMarkup(images));
 };
 
+
 function clearImagesContainer() {
     refs.galleryContainer.innerHTML = '';
 };
@@ -85,5 +90,4 @@ function clearImagesContainer() {
 function foundTotalHitsNotification(totalHits) {
     Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 };
-
 

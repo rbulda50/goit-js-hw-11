@@ -54,6 +54,11 @@ body {
     align-items: center;
 }
 
+.gallery__item {
+    text-decoration: none;
+    color: #000000;
+}
+
 /* btn load-more */
 
 .load-more {
@@ -75,3 +80,5 @@ body {
     visibility: hidden;
     display: none;
 }
+
+
