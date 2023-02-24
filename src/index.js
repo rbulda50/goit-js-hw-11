@@ -39,13 +39,13 @@ async function onFindImages(e) {
     clearImagesContainer();
 
     try {
-        const {hits, totalHits} = await imagesApiService.fetchImages();
-        if (hits.length === 0) {
+        const response = await imagesApiService.fetchImages();
+        if (response.hits.length === 0) {
             onError();
             return loadMoreBtn.hide();
     }
-            foundTotalHitsNotification(totalHits);
-            appendImagesMarkup(hits);
+            foundTotalHitsNotification(response.totalHits);
+            appendImagesMarkup(response.hits);
             loadMoreBtn.show();
             loadMoreBtn.enable();
             simpleGallery.refresh();
