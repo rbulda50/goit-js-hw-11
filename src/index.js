@@ -55,13 +55,13 @@ async function onFindImages(e) {
 };
 
 async function onLoadMore() {
-    const { totalHits, hits } = await imagesApiService.fetchImages();
+    const response = await imagesApiService.fetchImages();
     try {
-        if (imagesApiService.loadedHits >= totalHits) {
+        if (imagesApiService.loadedHits >= response.totalHits) {
             loadMoreBtn.disable();
             return endLoadMore();
         } else {
-            appendImagesMarkup(hits);
+            appendImagesMarkup(response.hits);
             return simpleGallery.refresh();
     };
     } catch (error) {
