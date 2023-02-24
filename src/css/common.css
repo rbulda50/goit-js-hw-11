@@ -39,7 +39,7 @@ body {
 
 .photo-card {
     -webkit-box-shadow: 0px 3px 16px 1px #000000;
-        box-shadow: 0px 3px 16px 1px #000000;
+    box-shadow: 0px 3px 16px 1px #000000;
 }
 
 .info {
@@ -54,7 +54,7 @@ body {
     align-items: center;
 }
 
-// btn load-more
+/* btn load-more */
 
 .load-more {
     position: relative;

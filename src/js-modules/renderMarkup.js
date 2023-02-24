@@ -1,8 +1,13 @@
 export default function renderMarkup(images) {
-    const markup = images.map(({webformatURL, tags, likes, views, comments, downloads}) => {
-        return `
+    return images.map(({largeImageURL, webformatURL, tags, likes, views, comments, downloads}) => {
+      return `
             <div class="photo-card">
-  <img src="${webformatURL }" alt="${tags}" width="320" height="200" loading="lazy" />
+                <img src="${webformatURL}" 
+                  alt="${tags}" 
+                  width="320" 
+                  height="210" 
+                  loading="lazy" 
+                  />
   <div class="info">
     <p class="info-item">
       <b>Likes</b>
@@ -21,7 +26,7 @@ export default function renderMarkup(images) {
       ${downloads}
     </p>
   </div>
-</div>`
+</div>
+`
     }).join('')
-    return markup;
 }
