@@ -9,7 +9,6 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 const refs = {
     galleryContainer: document.querySelector('.gallery'),
     form: document.querySelector('.search-form'),
-    // loadMoreBtn: document.querySelector('.load-more'),
 };
 
 const imagesApiService = new ImagesApiService();
