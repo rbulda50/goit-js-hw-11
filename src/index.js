@@ -1,8 +1,7 @@
 import ImagesApiService from './js-modules/images-service';
-import renderMarkup from './js-modules/renderMarkup';
+import createMarkup from './js-modules/createMarkup';
 import LoadMoreButton from './js-modules/load-more';
-import Notiflix from 'notiflix';
-
+import { onError, onEndLoadMore, onTotalHitsNotification } from './js-modules/notifications';
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
@@ -31,7 +30,7 @@ async function onFindImages(e) {
     const inputValue = e.currentTarget.elements.searchQuery.value;
     imagesApiService.query = inputValue;
 
-    if (inputValue === '') {
+    if (inputValue.trim() === '') {
         return onError();
     } 
     imagesApiService.resetPage();
@@ -43,50 +42,35 @@ async function onFindImages(e) {
         if (response.hits.length === 0) {
             onError();
             return loadMoreBtn.hide();
-    }
-            foundTotalHitsNotification(response.totalHits);
-            appendImagesMarkup(response.hits);
+            }
+            onTotalHitsNotification(response.totalHits);
+            renderImagesMarkup(response.hits);
             loadMoreBtn.show();
-            loadMoreBtn.enable();
-            simpleGallery.refresh();
     } catch (error) {
-            console.log(error)
+        console.log(error);
     }
 };
 
 async function onLoadMore() {
     const response = await imagesApiService.fetchImages();
-    try {
-        if (imagesApiService.loadedHits >= response.totalHits) {
-            loadMoreBtn.disable();
-            return endLoadMore();
+
+    if (imagesApiService.loadedHits > response.totalHits) {
+            renderImagesMarkup(response.hits);
+            loadMoreBtn.hide();
+            return onEndLoadMore();
         } else {
-            appendImagesMarkup(response.hits);
-            return simpleGallery.refresh();
-    };
-    } catch (error) {
-        console.log(error)
+            return renderImagesMarkup(response.hits);
     };
 };
 
-function onError() {
-    return Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+function renderImagesMarkup(images) {
+    refs.galleryContainer.insertAdjacentHTML('beforeend', createMarkup(images));
+    loadMoreBtn.enable();
+    simpleGallery.refresh();
 };
-
-function endLoadMore() {
-    return Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
-};
-
-function appendImagesMarkup(images) {
-    refs.galleryContainer.insertAdjacentHTML('beforeend', renderMarkup(images));
-};
-
 
 function clearImagesContainer() {
     refs.galleryContainer.innerHTML = '';
 };
 
-function foundTotalHitsNotification(totalHits) {
-    Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-};
 

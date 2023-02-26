@@ -1,7 +1,7 @@
 @import '~node_modules/modern-normalize/modern-normalize.css';
 
 body {
-    padding-top: 85px;
+    padding-top: 115px;
     background: hsla(45, 83%, 70%, 1);
     background: linear-gradient(90deg, hsla(45, 83%, 70%, 1) 0%, hsla(321, 90%, 70%, 1) 100%);
 }
@@ -27,6 +27,16 @@ body {
 
 .search-form > input {
     margin-right: 10px;
+    border-radius: 5px;
+}
+
+.search-form > button {
+    cursor: pointer;
+        padding: 10px;
+        background: hsla(45, 83%, 70%, 1);
+        background: linear-gradient(90deg, hsla(45, 83%, 70%, 1) 0%, hsla(321, 90%, 70%, 1) 100%);
+        border-radius: 5px;
+        color: #020000;
 }
 
 

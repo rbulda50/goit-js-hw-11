@@ -24,10 +24,10 @@ export default class ImagesApiService {
             };
             const response = await axios(BASE_URL, options);
             this.page += 1;
-            this.loadedHits += response.data.hits.length;
+            this.loadedHits += options.params.per_page;
             return response.data;
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     };
 

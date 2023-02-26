@@ -1,4 +1,4 @@
-export default function renderMarkup(images) {
+export default function createMarkup(images) {
     return images.map(({largeImageURL, webformatURL, tags, likes, views, comments, downloads}) => {
       return `
 <a class="gallery__item" href="${largeImageURL}">
